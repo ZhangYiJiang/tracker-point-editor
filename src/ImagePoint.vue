@@ -9,8 +9,6 @@
 <script>
 export default {
   props: ['point', 'isKeyframe'],
-
-
 }
 </script>
 

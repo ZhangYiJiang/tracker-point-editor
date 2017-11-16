@@ -94,6 +94,9 @@
     user-select: none;
 
     .image {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
       pointer-events: none;
     }
 
