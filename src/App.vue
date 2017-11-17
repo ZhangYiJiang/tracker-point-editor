@@ -56,18 +56,21 @@
       <input id="scrub" type="range" min="0" :max="frames.length - 1"
              @input="updateFrame($event.target.value)" />
 
-      <label>Onion</label>
+      <label for="onion">Onion</label>
+      <input id="onion" type="checkbox" v-model="onionEnabled" />
 
       <div v-if="currentFrame" class="frame-container">
         <h3>Frame {{ current }}</h3>
+
         <image-frame :frame="currentFrame"
+                     :onion="currentOnion"
                      :points="points"
                      :offset="offset"
                      @pointMove="pointMoved" />
       </div>
     </div>
 
-    <div v-show="Object.keys(points).length">
+    <div>
       <h3>Data</h3>
       <textarea rows="20" cols="50" ref="dataTextarea"></textarea>
       <button @click="importData">Import</button>
@@ -107,6 +110,7 @@ export default {
       current: 0,
       points: points || {},
       offset: offset || { x: 0, y: 0 },
+      onionEnabled: false,
     };
   },
 
@@ -120,6 +124,12 @@ export default {
     currentFrame() {
       if (!this.frames.length) return null;
       return this.frames[this.current];
+    },
+
+    currentOnion() {
+      if (this.onionEnabled && this.current !== 0) {
+        return this.frames[this.current - 1];
+      }
     },
 
     data() {
@@ -194,6 +204,7 @@ export default {
 
     importData() {
       try {
+        console.log(this.$refs.dataTextarea.value)
         const { points, offset } = JSON.parse(this.$refs.dataTextarea.value);
         const { x, y } = offset;
         if (typeof x !== 'number' || typeof y !== 'number' || !points) {
@@ -202,7 +213,10 @@ export default {
 
         this.offset = offset;
         this.points = points;
+
+        alert(`Imported ${Object.keys(points).length} points and offset data`);
       } catch (e) {
+        console.error(e);
         alert('Invalid data / JSON');
       }
     },

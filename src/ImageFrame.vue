@@ -14,6 +14,8 @@
                      :isKeyframe="lastKeyFrame(point) === String(frame.id)" />
       </div>
     </div>
+
+    <img v-if="onionSrc" class="image onion" :src="onionSrc" :style="imgOffset" />
     <img class="image" :src="imgSrc" :style="imgOffset" />
   </div>
 </template>
@@ -22,7 +24,7 @@
   import ImagePoint from './ImagePoint';
 
   export default {
-    props: ['frame', 'points', 'offset'],
+    props: ['frame', 'points', 'offset', 'onion'],
 
     components: {
       ImagePoint,
@@ -31,6 +33,15 @@
     computed: {
       imgSrc() {
         return window.URL.createObjectURL(this.frame.file);
+      },
+
+      onionSrc() {
+        if (!this.onion) return null;
+        return window.URL.createObjectURL(this.onion.file);
+      },
+
+      onionPoints() {
+
       },
 
       imgOffset() {
@@ -98,6 +109,12 @@
       -webkit-user-select: none;
       user-select: none;
       pointer-events: none;
+    }
+
+    .onion {
+      position: absolute;
+      opacity: 0.4;
+      z-index: 50;
     }
 
     .point {
